@@ -40,9 +40,8 @@
         values (list ip date time zone cik
           accession doc code size idx
           norefer noagent find crawler browser)]
-    (when-not (every? nil? values)
-      values))) ; will return 'values' if not every element in it is nil; and 'nil' otherwise
-                ; so for the file's header (first line in the file) returns 'nil'
+    (when-not (every? nil? values) ; will return 'nil' if every element in values is NIL
+      {:ip ip :date date :time time :zone zone :cik cik :accession accession :doc doc :code code :size size :idx idx :norefer norefer :noagent noagent :find find :crawler crawler :browser browser})))
 
 (defn read-lines-lazily
   "Reads a file lazily, returning a lazy-sequence."
