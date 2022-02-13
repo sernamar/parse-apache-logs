@@ -1,6 +1,6 @@
-* TODO Parse Apache logs TODO list [1/6]
+* TODO Parse Apache logs TODO list [2/6]
   - [X] Read a very large file that doesn't fit in memory.
-  - [ ] Parse a single log line.
+  - [X] Parse a single Apache log line.
   - [ ] Conect to a SQLite database and save the parsed file content to it.
   - [ ] Query the SQLite database.
   - [ ] Use Elasticsearch instead of SQLite.
@@ -33,3 +33,10 @@
        (count (lazy-file-lines "/tmp/massive-file.txt"))
      #+end_src
      This approach has the advantage that you can process the stream of data "elsewhere" without keeping everything in memory, but it also has an important disadvantage - the file is not closed until the end of the stream is read. If you are not careful you may open many files in parallel, or even forget to close them (by not reading the stream completely).
+** Parse a single log line.
+   - Apache log format: ~ip,date,time,zone,cik,accession,extention,code,size,idx,norefer,noagent,find,crawler,browser~
+   - Regex in Clojure:
+     - Use literal syntax (strings with a hash in front are interpreted as regexes):
+       #+begin_src clojure
+         #"regex" ; creates an instance of java.util.regex.Pattern
+       #+end_src
