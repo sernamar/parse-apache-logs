@@ -1,23 +1,6 @@
 (ns parse-apache-logs.parser
   (:require [clojure.java.io :as io]))
 
-(defn read-lines-lazily
-  "Reads a file lazily, returning a lazy-sequence."
-  [file]
-  ;; See this stackoverflow answer https://stackoverflow.com/a/10462159 about why we cannot use 'with-open' if we want to later apply a function to each line read using 'line-seq'.
-  ;; The code we'll use is the one copied from the following answer in the same question: https://stackoverflow.com/a/13312151
-  (letfn [(helper [reader]
-                  (lazy-seq
-                    (if-let [line (.readLine reader)]
-                      (cons line (helper reader))
-                      (do (.close reader) nil))))]
-    (helper (clojure.java.io/reader file))))
-
-(defn parse-file
-  "Parse the file lazily using the parser function."
-  [file parser]
-  (parser (read-lines-lazily file)))
-
 (def apache-log-pattern
   "
   Regex to parse an Apache log line.
@@ -58,21 +41,28 @@
           accession doc code size idx
           norefer noagent find crawler browser)))
 
+(defn read-lines-lazily
+  "Reads a file lazily, returning a lazy-sequence."
+  [file]
+  ;; See this stackoverflow answer https://stackoverflow.com/a/10462159 about why we cannot use 'with-open' if we want to later apply a function to each line read using 'line-seq'.
+  ;; The code we'll use is the one copied from the following answer in the same question: https://stackoverflow.com/a/13312151
+  (letfn [(helper [reader]
+                  (lazy-seq
+                    (if-let [line (.readLine reader)]
+                      (cons line (helper reader))
+                      (do (.close reader) nil))))]
+    (helper (clojure.java.io/reader file))))
+
+(defn parse-file
+  "Parse the file lazily using the parser function."
+  [file parser]
+  (map parser (read-lines-lazily file)))
+
+(defn parse-apache-file
+  "Parses an Apache log file."
+  [file]
+  (parse-file file apache-parser))
+
 ;; example
-(let [log-line "1.234.83.eib,2017-04-06,00:00:00,0.0,1319947.0,0001225208-17-007392,-index.htm,200.0,2770.0,1.0,0.0,0.0,10.0,0.0,fox"]
-  (apache-parser log-line))
-;; ("1.234.83.eib"
-;;  "2017-04-06"
-;;  "00:00:00"
-;;  "0.0"
-;;  "1319947.0"
-;;  "0001225208-17-007392"
-;;  "-index.htm"
-;;  "200.0"
-;;  "2770.0"
-;;  "1.0"
-;;  "0.0"
-;;  "0.0"
-;;  "10.0"
-;;  "0.0"
-;;  "fox")
+(let [file "data/log20170406/10.log"]
+  (parse-apache-file file))
