@@ -1,8 +1,11 @@
-* TODO Parse Apache logs TODO list [2/6]
+* TODO Parse Apache logs TODO list [3/6]
   - [X] Read a very large file that doesn't fit in memory.
   - [X] Parse a single Apache log line.
-  - [ ] Conect to a SQLite database and save the parsed file content to it.
-  - [ ] Query the SQLite database.
+  - [-] Conect to a SQLite database and save the parsed file content to it.
+    - [X] Create the SQLite database.
+    - [X] Create a table named /log/.
+    - [ ] Insert the contents of a log file into the table.
+  - [X] Query the SQLite database.
   - [ ] Use Elasticsearch instead of SQLite.
   - [ ] (Optional) Read and parse a log file in real time.
 
