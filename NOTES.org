@@ -1,7 +1,35 @@
-* TODO Parse Apache logs TODO list [0/6]
-  - [ ] Read a very large file that doesn't fit in memory.
+* TODO Parse Apache logs TODO list [1/6]
+  - [X] Read a very large file that doesn't fit in memory.
   - [ ] Parse a single log line.
   - [ ] Conect to a SQLite database and save the parsed file content to it.
   - [ ] Query the SQLite database.
   - [ ] Use Elasticsearch instead of SQLite.
   - [ ] (Optional) Read and parse a log file in real time.
+
+* Notes
+** Read a very large file that doesn't fit in memory
+   - Use ~line-seq~:
+     #+begin_src clojure
+       (line-seq rdr)
+       ;; Returns the lines of text from rdr as a lazy sequence of strings.
+       ;; rdr must implement java.io.BufferedReader.
+
+       ;; Example - Count lines of a file (loses head):
+       (with-open [rdr (clojure.java.io/reader "/etc/passwd")]
+         (count (line-seq rdr)))
+     #+end_src
+   - But we cannot use ~with-open~ (example of counting lines, in the above block of code) if we want to apply a function to each line read using ~line-seq~, as it's mentioned in this stackoverflow question [[https://stackoverflow.com/questions/4118123/read-a-very-large-text-file-into-a-list-in-clojure/10462159#10462159][Read a very large text file into a list in clojure]].
+     The reason is because the file is closed when ~with-open~ returns, which is before you lazily process the file.
+     The solution is to leave the file open until you get to the end of the read, while generating a lazy sequence:
+     #+begin_src clojure
+       (defn lazy-file-lines [file]
+         (letfn [(helper [rdr]
+                         (lazy-seq
+                           (if-let [line (.readLine rdr)]
+                             (cons line (helper rdr))
+                             (do (.close rdr) nil))))]
+                (helper (clojure.java.io/reader file))))
+
+       (count (lazy-file-lines "/tmp/massive-file.txt"))
+     #+end_src
+     This approach has the advantage that you can process the stream of data "elsewhere" without keeping everything in memory, but it also has an important disadvantage - the file is not closed until the end of the stream is read. If you are not careful you may open many files in parallel, or even forget to close them (by not reading the stream completely).
