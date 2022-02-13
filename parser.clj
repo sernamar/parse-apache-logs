@@ -35,39 +35,27 @@
 ;; ip,date,time,zone,cik,accession,doc,code,size,idx,norefer,noagent,find,crawler,browser
 ;; 1.234.83.eib,2017-04-06,00:00:00,0.0,1319947.0,0001225208-17-007392,-index.htm,200.0,2770.0,1.0,0.0,0.0,10.0,0.0,fox
 
-(def ip-regex #"(\d{1,3}\.\d{1,3}\.\d{1,3}.\w{1,3})")
-(def date-regex #"(\d{4}-\d{2}-\d{2})")
-(def time-regex #"(\d{2}:\d{2}:\d{2})")
-(def zone-regex #"(\d\.0)")
-(def cik-regex #"(\d{1,10}\.0)")
-(def accession-regex #"(\d+-\d{2}\-\d+)")
-(def doc-regex #"(.+)")
-(def code-regex #"(\d{3}\.0)")
-(def size-regex #"(\d+.0)")
-(def idx-regex #"([0,1].0)")
-(def norefer-regex #"([0,1].0)")
-(def noagent-regex #"([0,1].0)")
-(def find-regex #"(\d{1,10}\.0)")
-(def crawler-regex #"([0,1].0)")
-(def browser-regex #"(\w{0,3})")
-
 (def apache-log-pattern
-  (re-pattern 
-   (clojure.string/join "," (list ip-regex
-                                  date-regex
-                                  time-regex
-                                  zone-regex
-                                  cik-regex
-                                  accession-regex
-                                  doc-regex
-                                  code-regex
-                                  size-regex
-                                  idx-regex
-                                  norefer-regex
-                                  noagent-regex
-                                  find-regex
-                                  crawler-regex
-                                  browser-regex))))
+  (let [ip-regex #"(\d{1,3}\.\d{1,3}\.\d{1,3}.\w{1,3})"
+        date-regex #"(\d{4}-\d{2}-\d{2})"
+        time-regex #"(\d{2}:\d{2}:\d{2})"
+        zone-regex #"(\d\.0)"
+        cik-regex #"(\d{1,10}\.0)"
+        accession-regex #"(\d+-\d{2}\-\d+)"
+        doc-regex #"(.+)"
+        code-regex #"(\d{3}\.0)"
+        size-regex #"(\d+.0)"
+        idx-regex #"([0,1].0)"
+        norefer-regex #"([0,1].0)"
+        noagent-regex #"([0,1].0)"
+        find-regex #"(\d{1,10}\.0)"
+        crawler-regex #"([0,1].0)"
+        browser-regex #"(\w{0,3})"]
+    (re-pattern 
+     (clojure.string/join "," (list ip-regex date-regex time-regex zone-regex cik-regex
+                                    accession-regex doc-regex code-regex size-regex
+                                    idx-regex norefer-regex noagent-regex find-regex
+                                    crawler-regex browser-regex)))))
 
 (defn apache-parser
   "
@@ -82,12 +70,9 @@
           accession doc code size idx
           norefer noagent find crawler browser)))
 
-
-(def log-line-example
-  "1.234.83.eib,2017-04-06,00:00:00,0.0,1319947.0,0001225208-17-007392,-index.htm,200.0,2770.0,1.0,0.0,0.0,10.0,0.0,fox")
-
 ;; example
-(apache-parser log-line-example)
+(let [log-line "1.234.83.eib,2017-04-06,00:00:00,0.0,1319947.0,0001225208-17-007392,-index.htm,200.0,2770.0,1.0,0.0,0.0,10.0,0.0,fox"]
+  (apache-parser log-line))
 ;; ("1.234.83.eib"
 ;;  "2017-04-06"
 ;;  "00:00:00"
