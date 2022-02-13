@@ -63,7 +63,8 @@
 (defn parse-apache-file
   "Parses an Apache log file."
   [file]
-  (parse-file file apache-parser))
+  ;; use REMOVE NIL? to remove the NIL produced when parsing the file's header
+  (remove nil? (parse-file file apache-parser)))
 
 ;; example
 (let [file "data/log20170406/10.log"]
