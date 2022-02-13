@@ -36,10 +36,13 @@
   Returns a list of strings with the parsed values.
   "
   [log-line]
-  (let [[_ ip date time zone cik accession doc code size idx norefer noagent find crawler browser] (re-matches apache-log-pattern log-line)]
-    (list ip date time zone cik
+  (let [[_ ip date time zone cik accession doc code size idx norefer noagent find crawler browser] (re-matches apache-log-pattern log-line)
+        values (list ip date time zone cik
           accession doc code size idx
-          norefer noagent find crawler browser)))
+          norefer noagent find crawler browser)]
+    (when-not (every? nil? values)
+      values))) ; will return 'values' if not every element in it is nil; and 'nil' otherwise
+                ; so for the file's header (first line in the file) returns 'nil'
 
 (defn read-lines-lazily
   "Reads a file lazily, returning a lazy-sequence."
