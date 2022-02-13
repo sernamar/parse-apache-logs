@@ -1,1 +1,2 @@
-{}
+{:deps {com.github.seancorfield/next.jdbc {:mvn/version "1.2.772"}
+        org.xerial/sqlite-jdbc {:mvn/version "3.36.0.3"}}}
