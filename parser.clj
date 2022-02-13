@@ -19,21 +19,26 @@
   (parser (read-lines-lazily file)))
 
 (def apache-log-pattern
-  (let [ip-regex #"(\d{1,3}\.\d{1,3}\.\d{1,3}.\w{1,3})"
-        date-regex #"(\d{4}-\d{2}-\d{2})"
-        time-regex #"(\d{2}:\d{2}:\d{2})"
-        zone-regex #"(\d\.0)"
-        cik-regex #"(\d{1,10}\.0)"
-        accession-regex #"(\d+-\d{2}\-\d+)"
-        doc-regex #"(.+)"
-        code-regex #"(\d{3}\.0)"
-        size-regex #"(\d+.0)"
-        idx-regex #"([0,1].0)"
-        norefer-regex #"([0,1].0)"
-        noagent-regex #"([0,1].0)"
-        find-regex #"(\d{1,10}\.0)"
-        crawler-regex #"([0,1].0)"
-        browser-regex #"(\w{0,3})"]
+  "
+  Regex to parse an Apache log line.
+  Format: ip,date,time,zone,cik,accession,doc,code,size,idx,norefer,noagent,find,crawler,browser
+  Example: 1.234.83.eib,2017-04-06,00:00:00,0.0,1319947.0,0001225208-17-007392,-index.htm,200.0,2770.0,1.0,0.0,0.0,10.0,0.0,fox
+  "
+  (let [ip-regex #"(\d{1,3}\.\d{1,3}\.\d{1,3}.\w{1,3})" ; 1.234.83.eib
+        date-regex #"(\d{4}-\d{2}-\d{2})" ; 2017-04-06
+        time-regex #"(\d{2}:\d{2}:\d{2})" ; 00:00:00
+        zone-regex #"(\d\.0)" ; 0.0
+        cik-regex #"(\d{1,10}\.0)" ; 1319947.0
+        accession-regex #"(\d+-\d{2}\-\d+)" ; 0001225208-17-007392
+        doc-regex #"(.+)" ; -index.htm
+        code-regex #"(\d{3}\.0)" ; 200.0
+        size-regex #"(\d+.0)" ; 2770.0
+        idx-regex #"([0,1].0)" ; 1.0
+        norefer-regex #"([0,1].0)" ; 0.0
+        noagent-regex #"([0,1].0)" ; 0.0
+        find-regex #"(\d{1,10}\.0)" ; 10.0
+        crawler-regex #"([0,1].0)" ; 0.0
+        browser-regex #"(\w{0,3})"]  ; fox
     (re-pattern 
      (clojure.string/join "," (list ip-regex date-regex time-regex zone-regex cik-regex
                                     accession-regex doc-regex code-regex size-regex
