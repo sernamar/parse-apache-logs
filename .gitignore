@@ -12,3 +12,6 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+
+# Ignore data directory, because it contains very large files
+/data/
