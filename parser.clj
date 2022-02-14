@@ -28,7 +28,7 @@
                                     idx-regex norefer-regex noagent-regex find-regex
                                     crawler-regex browser-regex)))))
 
-(defn apache-parser
+(defn- apache-parser
   "
   Parses an Apache log line that has the following format:
   ip,date,time,zone,cik,accession,doc,code,size,idx,norefer,noagent,find,crawler,browser
@@ -43,7 +43,7 @@
     (when-not (every? nil? values) ; will return 'nil' if every element in values is NIL
       {:ip ip :date date :time time :zone zone :cik cik :accession accession :doc doc :code code :size size :idx idx :norefer norefer :noagent noagent :find find :crawler crawler :browser browser})))
 
-(defn read-lines-lazily
+(defn- read-lines-lazily
   "Reads a file lazily, returning a lazy-sequence."
   [file]
   ;; See this stackoverflow answer https://stackoverflow.com/a/10462159 about why we cannot use 'with-open' if we want to later apply a function to each line read using 'line-seq'.
@@ -55,7 +55,7 @@
                       (do (.close reader) nil))))]
     (helper (clojure.java.io/reader file))))
 
-(defn parse-file
+(defn- parse-file
   "Parse the file lazily using the parser function."
   [file parser]
   (map parser (read-lines-lazily file)))
@@ -67,5 +67,6 @@
   (remove nil? (parse-file file apache-parser)))
 
 ;; example
-(let [file "data/log20170406/10.log"]
-  (parse-apache-file file))
+(comment
+  (let [file "data/log20170406/10.log"]
+    (parse-apache-file file)))
