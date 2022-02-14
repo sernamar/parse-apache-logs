@@ -19,7 +19,7 @@
 (defn insert-logs [logs]
   (map insert-log logs))
 
-(defn- select-all []
+(defn select-all []
   (jdbc/execute! @connection ["SELECT * FROM log"]))
 
 (defn- close-connection []
