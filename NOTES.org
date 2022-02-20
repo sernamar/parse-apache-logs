@@ -43,3 +43,12 @@
        #+begin_src clojure
          #"regex" ; creates an instance of java.util.regex.Pattern
        #+end_src
+** Read database parameters from an external file
+*** Easiest way is just to read a ~edn~ file with the following content:
+    #+begin_src clojure
+      {:dbtype "postgres"
+       :dbname "dbname"
+       :username "username"
+       :password "password"
+       :dataSourceProperties {:socketTimeout 30}}
+    #+end_src

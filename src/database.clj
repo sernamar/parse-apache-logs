@@ -4,11 +4,7 @@
 
 (def connection (atom nil))
 
-(def db-params {:dbtype "postgres"
-                :dbname "dbname"
-                :username "username"
-                :password "password"
-                :dataSourceProperties {:socketTimeout 30}})
+(def db-params (clojure.edn/read (java.io.PushbackReader. (clojure.java.io/reader "db-params.edn"))))
 
 (defn- create-database []
   (let [database db-params]

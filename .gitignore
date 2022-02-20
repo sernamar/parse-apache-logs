@@ -15,3 +15,6 @@ pom.xml.asc
 
 # Ignore data directory, because it contains very large files
 /data/
+
+# Ignore file with the database connection parameters
+db-params.edn
