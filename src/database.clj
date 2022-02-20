@@ -4,14 +4,20 @@
 
 (def connection (atom nil))
 
+(def db-params {:dbtype "postgres"
+                :dbname "dbname"
+                :username "username"
+                :password "password"
+                :dataSourceProperties {:socketTimeout 30}})
+
 (defn- create-database []
-  (let [database {:dbtype "sqlite" :dbname ":memory:"}]
+  (let [database db-params]
     (reset! connection (-> database
                            jdbc/get-datasource
                            jdbc/get-connection))))
 
 (defn- create-log-table []
-  (jdbc/execute-one! @connection ["CREATE TABLE log (id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT, date TEXT, time TEXT, zone TEXT, cik TEXT, accession TEXT, doc TEXT, code TEXT, size TEXT, idx TEXT, norefer TEXT, noagent TEXT, find TEXT, crawler TEXT, browser TEXT)"]))
+  (jdbc/execute-one! @connection ["CREATE TABLE log (id SERIAL PRIMARY KEY, ip TEXT, date TEXT, time TEXT, zone TEXT, cik TEXT, accession TEXT, doc TEXT, code TEXT, size TEXT, idx TEXT, norefer TEXT, noagent TEXT, find TEXT, crawler TEXT, browser TEXT)"]))
 
 (defn- insert-log [log]
   (jdbc.sql/insert! @connection 'log log))
