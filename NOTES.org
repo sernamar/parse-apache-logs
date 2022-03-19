@@ -1,14 +1,3 @@
-* DONE Parse Apache logs TODO list [5/5]
-  - State "DONE"       from "TODO"       [2022-02-20 dom 09:25]
-  - [X] Read a very large file that doesn't fit in memory.
-  - [X] Parse a single Apache log line.
-  - [X] Conect to a SQLite database and save the parsed file content to it.
-    - [X] Create the SQLite database.
-    - [X] Create a table named /log/.
-    - [X] Insert the contents of a log file into the table.
-  - [X] Query the SQLite database.
-  - [X] Use Postgres instead of SQLite.
-
 * Notes
 ** Read a very large file that doesn't fit in memory
    - Use ~line-seq~:
@@ -44,11 +33,39 @@
          #"regex" ; creates an instance of java.util.regex.Pattern
        #+end_src
 ** Read database parameters from an external file
-*** Easiest way is just to read a ~edn~ file with the following content:
-    #+begin_src clojure
-      {:dbtype "postgres"
-       :dbname "dbname"
-       :username "username"
-       :password "password"
-       :dataSourceProperties {:socketTimeout 30}}
-    #+end_src
+- Easiest way is just to read a ~edn~ file with the following content:
+  #+begin_src clojure
+    {:dbtype "postgres"
+     :dbname "dbname"
+     :username "username"
+     :password "password"
+     :dataSourceProperties {:socketTimeout 30}}
+  #+end_src
+- To read a file called ~db-params.edn~, use:
+  #+begin_src clojure
+    (def db-params (-> "db-params.edn"
+                       slurp
+                       clojure.edn/read-string))
+  #+end_src
+- Previous version (a bit more complex) of reading that same file was:
+  #+begin_src clojure
+    (def db-params (clojure.edn/read (java.io.PushbackReader. (clojure.java.io/reader "db-params.edn"))))
+  #+end_src
+  or:
+  #+begin_src clojure
+    (def db-params (-> "db-params.edn"
+                       clojure.java.io/reader
+                       java.io.PushbackReader.
+                       clojure.edn/read))
+  #+end_src
+* DONE Parse Apache logs TODO list [5/5]
+  - State "DONE"       from "TODO"       [2022-02-20 dom 09:25]
+  - [X] Read a very large file that doesn't fit in memory.
+  - [X] Parse a single Apache log line.
+  - [X] Conect to a SQLite database and save the parsed file content to it.
+    - [X] Create the SQLite database.
+    - [X] Create a table named /log/.
+    - [X] Insert the contents of a log file into the table.
+  - [X] Query the SQLite database.
+  - [X] Use Postgres instead of SQLite.
+

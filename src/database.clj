@@ -4,7 +4,9 @@
 
 (def connection (atom nil))
 
-(def db-params (clojure.edn/read (java.io.PushbackReader. (clojure.java.io/reader "db-params.edn"))))
+(def db-params (-> "db-params.edn"
+                   slurp
+                   clojure.edn/read-string))
 
 (defn- create-database []
   (let [database db-params]
