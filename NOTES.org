@@ -37,6 +37,7 @@
   #+begin_src clojure
     {:dbtype "postgres"
      :dbname "dbname"
+     :port 5432
      :username "username"
      :password "password"
      :dataSourceProperties {:socketTimeout 30}}
