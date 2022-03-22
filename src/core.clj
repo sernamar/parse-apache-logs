@@ -1,5 +1,5 @@
 (ns parse-apache-logs.core
-  (:require [parse-apache-logs.database :refer [initialize-database
+  (:require [parse-apache-logs.database :refer [open-database
                                                 insert-logs
                                                 select-all
                                                 close-database]]
@@ -12,7 +12,7 @@
 
 
 ;; example
-(initialize-database)
+(open-database)
 (let [file "data/log20170406/10.log"]
   (parse-and-insert file))
 (select-all)
