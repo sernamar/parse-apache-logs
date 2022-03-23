@@ -2,11 +2,11 @@
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as jdbc.sql]))
 
-(def connection (atom nil))
+(def ^:private connection (atom nil))
 
-(def db-params (-> "db-params.edn"
-                   slurp
-                   clojure.edn/read-string))
+(def ^:private db-params (-> "db-params.edn"
+                             slurp
+                             clojure.edn/read-string))
 
 (defn get-connection []
   "Get a connection to the database."
