@@ -1,8 +1,9 @@
 (ns parse-apache-logs.core
-  (:require [parse-apache-logs.database :refer [connect-to-database
+  (:require [parse-apache-logs.database :refer [get-connection
+                                                create-log-table
                                                 insert-logs
                                                 select-all
-                                                disconnect-from-database]]
+                                                close-connection]]
             [parse-apache-logs.parser :refer [parse-apache-file]]))
 
 (defn parse-and-insert [file]
@@ -13,8 +14,9 @@
 
 
 ;; example
-(connect-to-database)
+(get-connection)
+(create-log-table)
 (let [file "data/log20170406/10.log"]
   (parse-and-insert file))
 (select-all)
-(disconnect-from-database)
+(close-connection)

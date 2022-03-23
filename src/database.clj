@@ -8,19 +8,15 @@
                    slurp
                    clojure.edn/read-string))
 
-(defn- get-database-connection [db-params]
-  "Get a connection to the database using the provided connection parameters."
+(defn get-connection []
+  "Get a connection to the database."
   (reset! connection (-> db-params
-                           jdbc/get-datasource
-                           jdbc/get-connection)))
+                         jdbc/get-datasource
+                         jdbc/get-connection)))
 
 ;;; ------------------- ;;;
 ;;; Database connection ;;;
 ;;; ------------------- ;;;
-
-(defn- create-log-table []
-  "Create a table called 'log' into the database."
-  (jdbc/execute-one! @connection ["CREATE TABLE log (id SERIAL PRIMARY KEY, ip TEXT, date TEXT, time TEXT, zone TEXT, cik TEXT, accession TEXT, doc TEXT, code TEXT, size TEXT, idx TEXT, norefer TEXT, noagent TEXT, find TEXT, crawler TEXT, browser TEXT)"]))
 
 (defn- table-in-database? [table]
   "Check in a table exists in the database."
@@ -29,14 +25,13 @@
                    "')")]
     (:exists (jdbc/execute-one! @connection [query]))))
 
-(defn connect-to-database []
-  "Connect to the database, creating a table called 'log' if it doesn't exist."
-  (get-database-connection db-params)
+(defn create-log-table []
+  "Create the 'log' table if it doesn't exist."
   (when-not (table-in-database? "log")
-    (create-log-table)))
+    (jdbc/execute-one! @connection ["CREATE TABLE log (id SERIAL PRIMARY KEY, ip TEXT, date TEXT, time TEXT, zone TEXT, cik TEXT, accession TEXT, doc TEXT, code TEXT, size TEXT, idx TEXT, norefer TEXT, noagent TEXT, find TEXT, crawler TEXT, browser TEXT)"])))
 
-(defn disconnect-from-database []
-  "Disconnect from the database."
+(defn close-connection []
+  "Close the connection to the database."
   (.close @connection))
 
 ;;; ---------------- ;;;
