@@ -8,15 +8,15 @@
                              slurp
                              clojure.edn/read-string))
 
+;;; ------------------- ;;;
+;;; Database connection ;;;
+;;; ------------------- ;;;
+
 (defn get-connection []
   "Get a connection to the database."
   (reset! connection (-> db-params
                          jdbc/get-datasource
                          jdbc/get-connection)))
-
-;;; ------------------- ;;;
-;;; Database connection ;;;
-;;; ------------------- ;;;
 
 (defn- table-in-database? [table]
   "Check in a table exists in the database."
