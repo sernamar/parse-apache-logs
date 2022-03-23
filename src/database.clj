@@ -39,7 +39,7 @@
 ;;; ---------------- ;;;
 
 (defn- insert-log [log]
-  "Insert a string with the content of a log line into the 'log' table."
+  "Insert the content of a log line into the 'log' table."
   (jdbc.sql/insert! @connection 'log log))
 
 (defn insert-logs [logs]
