@@ -4,9 +4,10 @@
 
 (def ^:private connection (atom nil))
 
-(def ^:private db-params (-> "db-params.edn"
+(def ^:private db-params (-> "config.edn"
                              slurp
-                             clojure.edn/read-string))
+                             clojure.edn/read-string
+                             :db-params))
 
 ;;; ------------------- ;;;
 ;;; Database connection ;;;

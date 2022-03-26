@@ -17,4 +17,4 @@ pom.xml.asc
 /data/
 
 # Ignore file with the database connection parameters
-db-params.edn
+config.edn
