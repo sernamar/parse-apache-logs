@@ -6,8 +6,9 @@
                                                 close-connection]]
             [parse-apache-logs.parser :refer [parse-apache-file]]))
 
-(defn parse-and-insert [file]
+(defn parse-and-insert
   "Parse an Apache log file and insert the data in the 'log' table of a database."
+  [file]
   (-> file
       parse-apache-file
       insert-logs))
