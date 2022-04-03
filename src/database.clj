@@ -23,10 +23,15 @@
 (defn- table-in-database?
   "Check if a table exists in the database."
   [table]
-  (let [query (str "SELECT EXISTS (SELECT FROM information_schema.tables WHERE  table_schema='public' AND table_name='"
-                   table
-                   "')")]
-    (:exists (jdbc/execute-one! @connection [query]))))
+  (-> (jdbc/execute-one! @connection
+                         ["SELECT EXISTS (
+                             SELECT NULL
+                             FROM INFORMATION_SCHEMA.tables
+                             WHERE table_schema = 'public'
+                               AND table_name = ?
+                           ) AS result"
+                          table])
+      :result))
 
 (defn create-log-table
   "Create the 'log' table if it doesn't exist."
