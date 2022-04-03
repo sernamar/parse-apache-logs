@@ -20,9 +20,9 @@
                          jdbc/get-datasource
                          jdbc/get-connection)))
 
-(defn- table-in-database?
+(defn- table-exists?
   "Check if a table exists in the database."
-  [table]
+  [table-name]
   (-> (jdbc/execute-one! @connection
                          ["SELECT EXISTS (
                              SELECT NULL
@@ -30,7 +30,7 @@
                              WHERE table_schema = 'public'
                                AND table_name = ?
                            ) AS result"
-                          table])
+                          table-name])
       :result))
 
 (defn create-log-table
