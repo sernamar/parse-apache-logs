@@ -8,16 +8,14 @@
 
 (defn parse-and-insert
   "Parse an Apache log file and insert the data in the 'log' table of a database."
-  [file]
-  (-> file
-      parse-apache-file
-      insert-logs))
+  [db file]
+  (insert-logs db (parse-apache-file file)))
 
 
 ;; example
-(get-connection)
-(create-log-table)
+(def db (get-connection))
+(create-log-table db)
 (let [file "data/log20170406/10.log"]
-  (parse-and-insert file))
-(select-all)
-(close-connection)
+  (parse-and-insert db file))
+(select-all db)
+(close-connection db)
