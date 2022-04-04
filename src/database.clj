@@ -2,21 +2,16 @@
   (:require [next.jdbc :as jdbc]
             [next.jdbc.sql :as jdbc.sql]))
 
-(def ^:private db-params (-> "config.edn"
-                             slurp
-                             clojure.edn/read-string
-                             :db-params))
-
 ;;; ------------------- ;;;
 ;;; Database connection ;;;
 ;;; ------------------- ;;;
 
 (defn get-connection
   "Get a connection to the database."
-  []
+  [db-params]
   (-> db-params
-       jdbc/get-datasource
-       jdbc/get-connection))
+      jdbc/get-datasource
+      jdbc/get-connection))
 
 (defn- table-exists?
   "Check if a table exists in the database."
@@ -34,7 +29,7 @@
 (defn create-log-table
   "Create the 'log' table if it doesn't exist."
   [db]
-  (when-not (table-in-database? "log")
+  (when-not (table-exists? db "log")
     (jdbc/execute-one! db
                        ["CREATE TABLE log (id SERIAL PRIMARY KEY, ip TEXT, date TEXT, time TEXT, zone TEXT, cik TEXT, accession TEXT, doc TEXT, code TEXT, size TEXT, idx TEXT, norefer TEXT, noagent TEXT, find TEXT, crawler TEXT, browser TEXT)"])))
 

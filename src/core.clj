@@ -6,6 +6,11 @@
                                                 close-connection]]
             [parse-apache-logs.parser :refer [parse-apache-file]]))
 
+(def db-params (-> "config.edn"
+                   slurp
+                   clojure.edn/read-string
+                   :db-params))
+
 (defn parse-and-insert
   "Parse an Apache log file and insert the data in the 'log' table of a database."
   [db file]
@@ -13,7 +18,7 @@
 
 
 ;; example
-(def db (get-connection))
+(def db (get-connection db-params))
 (create-log-table db)
 (let [file "data/log20170406/10.log"]
   (parse-and-insert db file))
